@@ -1,0 +1,44 @@
+{
+  "node_role": "development_anchor",
+  "network": "AI Points",
+  "version": "1.0",
+
+  "root": "https://aipoints.org/",
+  "network_entry": "https://aipoints.org/network/",
+
+  "description": "Development anchor and structural release node for the evolving AI Origins network.",
+
+  "related_authority_root": "https://aiorigins.org/",
+
+  "regional_path": [
+    "UK",
+    "EU",
+    "Asia"
+  ],
+
+  "regional_roles": {
+    "UK": "anchor_region",
+    "EU": "execution_and_witness_region",
+    "Asia": "studio_and_archive_region"
+  },
+
+  "layers": {
+    "network": "https://aipoints.org/network/",
+    "specification": "https://aipoints.org/spec/",
+    "discovery": "https://aipoints.org/agents/",
+    "releases": "https://aipoints.org/releases/network-layer-v1/",
+    "historical": "https://aipoints.org/_frozen/"
+  },
+
+  "machine_discovery": {
+    "node_registry": "https://aipoints.org/network/node-registry.json",
+    "agent_descriptor": "https://aipoints.org/agents/agent.json"
+  },
+
+  "governance": {
+    "origin_anchor": "https://goldisle.org/",
+    "structure": "Goldisle Light Org"
+  },
+
+  "status": "active"
+}
