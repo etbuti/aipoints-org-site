@@ -1,15 +1,86 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Network</title>
-  <style>
-    body{font-family:Arial,sans-serif;max-width:860px;margin:0 auto;padding:48px 20px;line-height:1.8;}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Network</title>
+
+<style>
+body{
+  font-family:Arial,sans-serif;
+  max-width:860px;
+  margin:0 auto;
+  padding:48px 20px;
+  line-height:1.8;
+}
+
+.map{
+  margin-top:40px;
+  text-align:center;
+}
+
+.node{
+  display:inline-block;
+  border:1px solid rgba(0,0,0,.15);
+  border-radius:12px;
+  padding:12px 16px;
+  margin:10px;
+  min-width:140px;
+}
+
+.small{
+  margin-top:40px;
+  font-size:13px;
+  opacity:.6;
+}
+</style>
 </head>
+
 <body>
-  <h1>Network</h1>
-  <p>Public network layer describing node relationships, role separation, and structure-facing continuity.</p>
+
+<h1>Network</h1>
+
+<p>
+Public network layer describing node relationships,
+role separation, and structure-facing continuity.
+</p>
+
+<h2>Observation Nodes</h2>
+
+<div class="map">
+
+<div class="node">
+<strong>London</strong><br>
+origin node
+</div>
+
+<div class="node">
+Qingdao<br>
+planned
+</div>
+
+<div class="node">
+Istanbul<br>
+planned
+</div>
+
+<div class="node">
+Sydney<br>
+planned
+</div>
+
+<div class="node">
+Africa<br>
+planned
+</div>
+
+</div>
+
+<p class="small">
+Anyone may operate an observation node.<br>
+Run a node:
+<a href="https://aiorigins.org/run-node/">aiorigins.org/run-node</a>
+</p>
+
 </body>
 </html>
