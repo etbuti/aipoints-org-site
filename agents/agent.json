@@ -1,46 +1,6 @@
 {
-  "name": "AI Points",
-  "entry_type": "machine_discovery",
-  "organization": "Goldisle Light Org",
-  "version": "1.0",
-  "description": "Development anchor and structural discovery entry for the evolving AI Origins network.",
-  "root_url": "https://aipoints.org/",
-  "related_authority_root": "https://aiorigins.org/",
-  "public_interfaces": [
-    {
-      "name": "Root",
-      "url": "https://aipoints.org/",
-      "role": "development_anchor"
-    },
-    {
-      "name": "Network",
-      "url": "https://aipoints.org/network/",
-      "role": "infrastructure"
-    },
-    {
-      "name": "Specification",
-      "url": "https://aipoints.org/spec/",
-      "role": "documentation"
-    },
-    {
-      "name": "Release Notes",
-      "url": "https://aipoints.org/releases/network-layer-v1/",
-      "role": "release"
-    }
-  ],
-  "machine_readable_files": [
-    {
-      "name": "node.json",
-      "url": "https://aipoints.org/network/node.json"
-    },
-    {
-      "name": "node-registry.json",
-      "url": "https://aipoints.org/network/node-registry.json"
-    },
-    {
-      "name": "attestation.json",
-      "url": "https://aipoints.org/network/attestation.json"
-    }
-  ],
-  "regional_path": ["UK", "EU", "Asia"]
+  "name": "aipoints-public-agent",
+  "role": "registry-facing",
+  "status": "active",
+  "scope": "public structure"
 }

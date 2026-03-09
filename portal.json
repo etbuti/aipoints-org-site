@@ -1,0 +1,13 @@
+{
+  "site": "AI Points",
+  "domain": "aipoints.org",
+  "entrypoints": [
+    "https://aipoints.org/",
+    "https://aipoints.org/agents/",
+    "https://aipoints.org/network/",
+    "https://aipoints.org/proof/",
+    "https://aipoints.org/audit/",
+    "https://aipoints.org/spec/"
+  ],
+  "linked_root_anchor": "https://aiorigins.org"
+}

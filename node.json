@@ -1,0 +1,10 @@
+{
+  "id": "aipoints-public-node",
+  "domain": "aipoints.org",
+  "role": "public-structure-layer",
+  "status": "active",
+  "root_anchor": "https://aiorigins.org",
+  "public_origin": "https://aipoints.org",
+  "entry": "https://aipoints.org/index.html",
+  "generated_for": "local deployment test"
+}
