@@ -1,4 +1,26 @@
+# AI Points — robots policy
+# indexing welcome · harvesting restricted
+
 User-agent: *
 Allow: /
+
+# Human-readable policy
+# https://aipoints.org/ai-policy/
+
+# Restrict bulk harvesting bots
+User-agent: TencentBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: PetalBot
+Disallow: /
+
+User-agent: YisouSpider
+Disallow: /
+
+# Courtesy crawl delay
+Crawl-delay: 5
 
 Sitemap: https://aipoints.org/sitemap.xml
