@@ -2,5 +2,40 @@
   "node": "aipoints-public-node",
   "domain": "aipoints.org",
   "root_anchor": "https://aiorigins.org",
-  "status": "published-test"
+  "status": "published"
+}
+
+{
+  "node": "https://aipoints.org",
+  "type": "ai-protocol-node",
+
+  "description": "AI Points structure layer providing protocol documentation, research material, and machine-readable resources.",
+
+  "discovery": {
+    "indexing": true,
+    "harvesting": false
+  },
+
+  "resources": {
+    "human_policy": "https://aipoints.org/ai-policy/",
+    "machine_policy": "https://aipoints.org/.well-known/ai-policy.json"
+  },
+
+  "content": [
+    "protocol documentation",
+    "original research",
+    "machine-readable structure"
+  ],
+
+  "operator": {
+    "name": "Evan Bei",
+    "site": "https://evanbei.com"
+  },
+
+  "network": {
+    "project": "AI Origins",
+    "structure_layer": "AI Points"
+  },
+
+  "updated": "2026-03"
 }
