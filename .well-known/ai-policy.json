@@ -1,0 +1,29 @@
+{
+  "site": "https://aipoints.org",
+  "policy": "AI usage policy",
+
+  "indexing": {
+    "allowed": true,
+    "description": "Indexing by search engines and research AI agents is welcome."
+  },
+
+  "harvesting": {
+    "allowed": false,
+    "description": "Bulk harvesting or automated replication into closed AI platforms without attribution is not permitted."
+  },
+
+  "content_type": [
+    "original research",
+    "protocol documentation",
+    "machine-readable materials"
+  ],
+
+  "reference_policy": {
+    "citation_required": true,
+    "link_back_required": true
+  },
+
+  "human_readable_policy": "https://aipoints.org/ai-policy/",
+
+  "updated": "2026-03"
+}
