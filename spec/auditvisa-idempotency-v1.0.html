@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AuditVisa Idempotent Processing Specification v1.0 · AI Points</title>
+  <meta name="description" content="AuditVisa Idempotent Processing Specification v1.0. 同一事件，只产生一个正式结果；重复到达，只复用，不重做。" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <link rel="canonical" href="https://aipoints.org/spec/auditvisa-idempotency-v1.0.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="AI Points" />
+  <meta property="og:title" content="AuditVisa Idempotent Processing Specification v1.0" />
+  <meta property="og:description" content="AuditVisa 幂等处理规范 v1.0。定义重复触发、重试、重复投递下的一致性处理原则。" />
+  <meta property="og:url" content="https://aipoints.org/spec/auditvisa-idempotency-v1.0.html" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AuditVisa Idempotent Processing Specification v1.0" />
+  <meta name="twitter:description" content="AuditVisa 幂等处理规范 v1.0" />
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"TechArticle",
+    "@id":"https://aipoints.org/spec/auditvisa-idempotency-v1.0.html#article",
+    "headline":"AuditVisa Idempotent Processing Specification v1.0",
+    "name":"AuditVisa Idempotent Processing Specification v1.0",
+    "description":"AuditVisa 幂等处理规范 v1.0。定义自动化交付流程中的幂等处理原则。",
+    "inLanguage":["zh-CN","en"],
+    "isPartOf":{
+      "@type":"WebSite",
+      "@id":"https://aipoints.org/#website",
+      "name":"AI Points"
+    },
+    "publisher":{
+      "@type":"Organization",
+      "name":"AI Points"
+    },
+    "about":[
+      {"@type":"Thing","name":"AuditVisa"},
+      {"@type":"Thing","name":"Idempotent Processing"},
+      {"@type":"Thing","name":"Event Processing"},
+      {"@type":"Thing","name":"Specification"}
+    ],
+    "url":"https://aipoints.org/spec/auditvisa-idempotency-v1.0.html",
+    "version":"v1.0",
+    "creativeWorkStatus":"Draft"
+  }
+  </script>
+  <style>
+    :root{
+      --bg:#f5f1e7;
+      --paper:#fffdf8;
+      --ink:#1c1c19;
+      --muted:#686357;
+      --line:#ddd4c2;
+      --accent:#5f563f;
+      --accent-2:#9d8453;
+      --soft:#f7f1e4;
+      --soft-2:#fbf7ef;
+      --code:#f3eee2;
+      --link:#465f92;
+      --max: 1040px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--ink);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,"Helvetica Neue",Arial,sans-serif;
+      line-height:1.72;
+      background:
+        radial-gradient(circle at top left, rgba(173,147,92,.14), transparent 30rem),
+        linear-gradient(180deg,#f8f5ee 0%,#f2ecdf 100%);
+    }
+    a{color:var(--link)}
+    .frame{
+      max-width:var(--max);
+      margin:0 auto;
+      padding:22px 18px 64px;
+    }
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      align-items:center;
+      color:var(--muted);
+      font-size:14px;
+      margin-bottom:14px;
+      padding:2px 4px;
+    }
+    .topbar .brand{
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-weight:700;
+      color:var(--accent);
+    }
+    .topbar .path{
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:12px;
+    }
+    .paper{
+      background:var(--paper);
+      border:1px solid var(--line);
+      border-radius:24px;
+      box-shadow:0 12px 30px rgba(50,36,12,.06);
+      overflow:hidden;
+    }
+    .hero{
+      padding:40px 44px 24px;
+      border-bottom:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(157,132,83,.11), rgba(157,132,83,0) 72%);
+    }
+    .pill{
+      display:inline-block;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:6px 10px;
+      background:#fffaf1;
+      color:var(--accent);
+      font-size:12px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-weight:700;
+    }
+    h1{
+      margin:16px 0 10px;
+      font-size:clamp(30px,5vw,48px);
+      line-height:1.1;
+      letter-spacing:-.02em;
+    }
+    .sub{
+      margin:0;
+      color:var(--muted);
+      font-size:18px;
+    }
+    .summary{
+      margin-top:18px;
+      max-width:760px;
+      color:#35332d;
+      font-size:16px;
+    }
+    .meta{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+      gap:12px;
+      margin-top:22px;
+    }
+    .meta .card{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px 14px;
+      background:#fff;
+      font-size:14px;
+    }
+    .meta strong{
+      display:block;
+      margin-bottom:4px;
+      color:var(--muted);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+    }
+    .lede{
+      margin-top:18px;
+      padding:14px 16px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:var(--soft-2);
+    }
+    nav.toc{
+      padding:22px 44px;
+      border-bottom:1px solid var(--line);
+      background:#fffdfa;
+    }
+    nav.toc h2{
+      margin:0 0 10px;
+      font-size:15px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--accent);
+    }
+    nav.toc ol{
+      columns:2;
+      gap:30px;
+      margin:0;
+      padding-left:20px;
+    }
+    nav.toc li{margin:6px 0; break-inside:avoid}
+    nav.toc a{
+      text-decoration:none;
+      color:var(--ink);
+      border-bottom:1px solid transparent;
+    }
+    nav.toc a:hover{border-color:var(--accent-2)}
+    main{padding:10px 44px 54px}
+    section{
+      padding-top:24px;
+      margin-top:24px;
+      border-top:1px solid var(--line);
+    }
+    section:first-child{
+      border-top:none;
+      margin-top:0;
+      padding-top:12px;
+    }
+    h2{
+      margin:0 0 14px;
+      font-size:29px;
+      line-height:1.22;
+      letter-spacing:-.01em;
+    }
+    h3{
+      margin:20px 0 8px;
+      font-size:18px;
+    }
+    p{margin:10px 0}
+    ul,ol{padding-left:22px}
+    li{margin:6px 0}
+    code,pre{
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    }
+    pre{
+      background:var(--code);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px 16px;
+      overflow:auto;
+      font-size:14px;
+      line-height:1.55;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+    .note,.quote{
+      margin:14px 0;
+      border-radius:14px;
+      padding:14px 16px;
+    }
+    .note{
+      background:var(--soft);
+      border:1px solid var(--line);
+    }
+    .quote{
+      background:#fffaf2;
+      border:1px solid #e7dcc6;
+      border-left:4px solid var(--accent-2);
+    }
+    .small{font-size:14px;color:var(--muted)}
+    footer{
+      border-top:1px solid var(--line);
+      background:#fffdfa;
+      padding:24px 44px 38px;
+      color:var(--muted);
+      font-size:14px;
+    }
+    footer .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:12px;
+    }
+    footer .box{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px 14px;
+      background:#fff;
+    }
+    @media (max-width:760px){
+      .hero,nav.toc,main,footer{padding-left:20px;padding-right:20px}
+      nav.toc ol{columns:1}
+      .topbar{display:block}
+      .topbar .path{margin-top:4px}
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <div class="topbar">
+      <div class="brand">AI Points · Specification</div>
+      <div class="path">/spec/auditvisa-idempotency-v1.0.html</div>
+    </div>
+
+    <article class="paper">
+      <header class="hero">
+        <span class="pill">Public Structure Layer</span>
+        <h1>AuditVisa Idempotent Processing Specification v1.0</h1>
+        <p class="sub">AuditVisa 幂等处理规范 v1.0</p>
+        <p class="summary">本规范用于定义 AuditVisa 在自动化交付流程中的幂等处理原则，确保在重复触发、网络重试、重复投递与并发到达等情况下，同一有效事件始终指向同一正式结果。</p>
+
+        <div class="meta">
+          <div class="card"><strong>Status</strong>Draft for implementation / public documentation</div>
+          <div class="card"><strong>Version</strong>v1.0</div>
+          <div class="card"><strong>Maintained by</strong>AuditVisa / AI Origins related structure</div>
+          <div class="card"><strong>Suggested Host</strong>AI Points · Public Structure Layer</div>
+        </div>
+
+        <div class="lede">
+          <strong>定位句：</strong>同一事件，只产生一个正式结果；重复到达，只复用，不重做。
+        </div>
+      </header>
+
+      <nav class="toc">
+        <h2>Contents</h2>
+        <ol>
+          <li><a href="#s1">1. 目的</a></li>
+          <li><a href="#s2">2. 定义</a></li>
+          <li><a href="#s3">3. 适用原则</a></li>
+          <li><a href="#s4">4. 幂等判定键</a></li>
+          <li><a href="#s5">5. 标准处理流程</a></li>
+          <li><a href="#s6">6. 状态模型</a></li>
+          <li><a href="#s7">7. 结果复用规则</a></li>
+          <li><a href="#s8">8. 存储要求</a></li>
+          <li><a href="#s9">9. 通知规范</a></li>
+          <li><a href="#s10">10. 并发控制</a></li>
+          <li><a href="#s11">11. 异常恢复</a></li>
+          <li><a href="#s12">12. 审计要求</a></li>
+          <li><a href="#s13">13. 安全与信任边界</a></li>
+          <li><a href="#s14">14. 实现建议</a></li>
+          <li><a href="#s15">15. 对外说明建议</a></li>
+          <li><a href="#s16">16. 合规结论</a></li>
+          <li><a href="#s17">17. 版本信息</a></li>
+          <li><a href="#s18">18. 一句定位版</a></li>
+        </ol>
+      </nav>
+
+      <main>
+        <section id="s1">
+          <h2>1. 目的</h2>
+          <p>本规范用于定义 AuditVisa 在自动化交付流程中的幂等处理原则，以确保在面对重复触发、重复通知、网络重试、外部平台重复投递等情况时，系统能够：</p>
+          <ol>
+            <li>保证同一业务事件不会被重复执行；</li>
+            <li>保证同一交付结果不会被重复生成为多个不一致副本；</li>
+            <li>保证重复请求可获得一致、可追溯、可验证的既有结果；</li>
+            <li>保证自动化流程在网络不稳定或第三方平台重复推送条件下仍保持稳定与可审计性。</li>
+          </ol>
+        </section>
+
+        <section id="s2">
+          <h2>2. 定义</h2>
+
+          <h3>2.1 幂等（Idempotency）</h3>
+          <p>对于同一逻辑事件，无论系统被触发一次还是多次，其最终结果应当保持一致，不因重复执行而产生额外副作用。</p>
+          <div class="note">在 AuditVisa 语境中，幂等意味着：同一支付事件不会重复生成多个不同出证包；同一交付事件不会重复写入多个冲突性结果；同一通知事件在重复触发时，应优先复用既有结果，而不是重新制造新结果。</div>
+
+          <h3>2.2 事件（Event）</h3>
+          <p>事件是指由外部系统或内部系统触发的、具有唯一标识的处理单元。例如 Stripe webhook event、内部审核任务完成事件、自动打包完成事件、自动投递通知事件。</p>
+          <pre>evt_XXXXXXXXXXXX</pre>
+
+          <h3>2.3 业务引用（Reference）</h3>
+          <p>业务引用是系统内部用于绑定处理记录的唯一引用标识。例如：</p>
+          <pre>av_evt_1T5pdGGRtItDCjuJ7AJcYMdb</pre>
+
+          <h3>2.4 会话标识（Session ID / SID）</h3>
+          <p>会话标识指与一次支付或业务提交相关联的会话 ID，例如 Stripe Checkout Session：</p>
+          <pre>cs_live_XXXXXXXXXXXX</pre>
+          <p>SID 可用于关联付款上下文，但 <strong>不应单独作为幂等主键</strong>。</p>
+        </section>
+
+        <section id="s3">
+          <h2>3. 适用原则</h2>
+          <ol>
+            <li><strong>唯一事件唯一结果：</strong>对于同一唯一事件，系统只允许存在一个正式处理结果。</li>
+            <li><strong>重复触发不重复生产：</strong>如事件重复到达，系统不得再次生成新的正式交付包，而应复用既有产物。</li>
+            <li><strong>结果优先复用：</strong>若既有结果已经存在，重复请求应直接返回既有 HTML、ZIP、JSON 或其索引引用。</li>
+            <li><strong>记录必须可追踪：</strong>每一个被判定为“已处理”的事件，都必须可追溯到原始事件 ID、内部引用 ID、交付物路径、首次处理时间与处理状态。</li>
+            <li><strong>拒绝隐性重复副作用：</strong>即便重复请求未重新生成文件，只要造成重复写库、重复通知、重复签名、重复计费、重复发包，也视为违反幂等原则。</li>
+          </ol>
+        </section>
+
+        <section id="s4">
+          <h2>4. 幂等判定键</h2>
+          <h3>4.1 主幂等键</h3>
+          <p>AuditVisa 应优先使用外部事件唯一 ID 作为主幂等判定键，例如：</p>
+          <pre>evt_1T5pdGGRtItDCjuJ7AJcYMdb</pre>
+          <p>内部可映射为：</p>
+          <pre>av_evt_1T5pdGGRtItDCjuJ7AJcYMdb</pre>
+
+          <h3>4.2 辅助关联键</h3>
+          <p>系统可记录以下辅助键用于关联与校验：</p>
+          <ul>
+            <li>session id (<code>cs_live_...</code>)</li>
+            <li>target</li>
+            <li>email</li>
+            <li>product / price id</li>
+            <li>request fingerprint</li>
+            <li>payload hash</li>
+          </ul>
+
+          <h3>4.3 规范要求</h3>
+          <p>当外部平台本身提供全局唯一事件 ID 时，系统不得仅依赖时间戳、用户邮箱、商品名、URL 或金额作为唯一判定依据。</p>
+        </section>
+
+        <section id="s5">
+          <h2>5. 标准处理流程</h2>
+          <h3>5.1 接收事件</h3>
+          <p>系统收到事件后，应立即提取：</p>
+          <ul>
+            <li>event_id</li>
+            <li>source</li>
+            <li>session_id</li>
+            <li>payload</li>
+            <li>received_at</li>
+          </ul>
+
+          <h3>5.2 生成内部引用</h3>
+          <pre>ref = av_evt_&lt;event_id&gt;</pre>
+
+          <h3>5.3 查重</h3>
+          <p>系统在执行正式处理前，必须检查本地或远程幂等记录库，例如：</p>
+          <ul>
+            <li><code>processed.jsonl</code></li>
+            <li>sqlite</li>
+            <li>kv store</li>
+            <li>append-only log</li>
+            <li>audit ledger</li>
+          </ul>
+          <p>查重结果应至少分为：<code>not_found</code>、<code>processing</code>、<code>processed</code>、<code>failed</code>、<code>orphaned</code>。</p>
+
+          <h3>5.4 首次处理</h3>
+          <ol>
+            <li>拉取或规范化业务参数；</li>
+            <li>执行出证；</li>
+            <li>生成 HTML / ZIP / JSON；</li>
+            <li>写入交付目录；</li>
+            <li>记录结果索引；</li>
+            <li>发送通知；</li>
+            <li>将状态写为 <code>processed</code>。</li>
+          </ol>
+
+          <h3>5.5 重复处理</h3>
+          <ol>
+            <li>不重复生成新文件；</li>
+            <li>不重复生成新签名；</li>
+            <li>不重复写入新的正式交付记录；</li>
+            <li>返回既有结果链接或结果摘要；</li>
+            <li>日志中标记为 <code>duplicate_reused</code>。</li>
+          </ol>
+
+          <h3>5.6 处理中重复到达</h3>
+          <p>若事件状态为 <code>processing</code>，系统应避免开启第二个正式处理流程，可返回处理中状态，或在短时间轮询后返回首次处理结果。</p>
+        </section>
+
+        <section id="s6">
+          <h2>6. 状态模型</h2>
+          <ul>
+            <li><code>received</code>：已收到事件，尚未开始正式处理。</li>
+            <li><code>processing</code>：已进入处理流程，结果尚未确认完成。</li>
+            <li><code>processed</code>：正式结果已生成，且已建立稳定索引。</li>
+            <li><code>duplicate_reused</code>：本次触发为重复触发，系统未重新执行，而是复用既有结果。</li>
+            <li><code>failed</code>：处理失败，且未产生有效正式结果。</li>
+            <li><code>orphaned</code>：发生部分产物生成但主记录未完整写入的异常状态。</li>
+          </ul>
+        </section>
+
+        <section id="s7">
+          <h2>7. 结果复用规则</h2>
+          <h3>7.1 可复用结果</h3>
+          <ul>
+            <li>HTML 报告</li>
+            <li>ZIP 打包文件</li>
+            <li>JSON 元数据</li>
+            <li>结果索引记录</li>
+            <li>run hash</li>
+            <li>签名结果</li>
+            <li>审计摘要</li>
+          </ul>
+
+          <h3>7.2 禁止重复生成的对象</h3>
+          <ul>
+            <li>新的交付文件名（除非系统明确采用同名覆盖策略）</li>
+            <li>新的正式签名</li>
+            <li>新的正式 run hash</li>
+            <li>新的正式通知记录</li>
+            <li>新的收费确认状态</li>
+          </ul>
+
+          <h3>7.3 复用输出建议</h3>
+          <pre>Duplicate event detected.
+Existing AuditVisa reused.</pre>
+          <pre>检测到重复事件，已复用既有 AuditVisa 结果。</pre>
+        </section>
+
+        <section id="s8">
+          <h2>8. 存储要求</h2>
+          <h3>8.1 幂等记录存储</h3>
+          <pre>{
+  "event_id": "evt_xxx",
+  "ref": "av_evt_xxx",
+  "sid": "cs_live_xxx",
+  "status": "processed",
+  "created_at": "2026-03-01T09:49:14Z",
+  "updated_at": "2026-03-01T09:49:20Z",
+  "html_url": "https://deliver.evanbei.com/d/xxx.html",
+  "zip_url": "https://deliver.evanbei.com/d/xxx.zip",
+  "run_hash": "xxx",
+  "payload_hash": "xxx"
+}</pre>
+
+          <h3>8.2 存储特性</h3>
+          <p>幂等记录存储应尽量满足：原子写入、可追加、可恢复、可审计、易导出、易备份。</p>
+
+          <h3>8.3 不可仅依赖内存</h3>
+          <p>幂等判定不得仅保存在进程内存中，否则服务重启后将丢失状态，造成重复处理风险。</p>
+        </section>
+
+        <section id="s9">
+          <h2>9. 通知规范</h2>
+          <h3>9.1 首次处理通知</h3>
+          <p>首次处理完成后，通知中应包括：处理成功说明、Event ID、Ref、SID（如适用）、HTML URL、ZIP URL。</p>
+
+          <h3>9.2 重复处理通知</h3>
+          <p>对于重复事件，通知中应标记为 <code>already processed</code> 或 <code>duplicate reused</code>，并明确说明未重新出证，当前链接为既有正式结果。</p>
+
+          <h3>9.3 禁止制造误导</h3>
+          <p>通知内容不得让使用者误以为系统发生了严重故障；如果实际情况只是重复 webhook 重试，应表达为受控状态、正常幂等拦截、稳定复用既有结果。</p>
+        </section>
+
+        <section id="s10">
+          <h2>10. 并发控制</h2>
+          <h3>10.1 单事件串行处理</h3>
+          <p>同一幂等键在任意时刻只允许一个正式处理流程运行。</p>
+
+          <h3>10.2 推荐机制</h3>
+          <ul>
+            <li>文件锁</li>
+            <li>sqlite transaction</li>
+            <li>advisory lock</li>
+            <li>原子创建标记文件</li>
+            <li>队列化单消费者处理</li>
+          </ul>
+
+          <h3>10.3 并发冲突处理</h3>
+          <p>若两个进程几乎同时收到同一事件，只有一个进程应成功进入 <code>processing</code>；另一个进程应检测到占用并退出或等待；最终均应指向同一正式结果。</p>
+        </section>
+
+        <section id="s11">
+          <h2>11. 异常恢复</h2>
+          <h3>11.1 半完成状态</h3>
+          <p>若系统在文件已生成但记录未写入、记录已写入但通知未发出、HTML 已存在但 ZIP 未完成等阶段中断，则应进入异常恢复流程。</p>
+
+          <h3>11.2 恢复原则</h3>
+          <ol>
+            <li>检查是否已有可复用正式产物；</li>
+            <li>若存在，则补全记录；</li>
+            <li>若不存在，则谨慎重新生成；</li>
+            <li>整个恢复过程仍应遵守幂等原则。</li>
+          </ol>
+
+          <h3>11.3 人工核验接口</h3>
+          <p>对于 <code>orphaned</code> 或 <code>failed</code> 状态，建议保留人工检查工具，用于核验文件是否完整、hash 是否一致、是否需要补写索引。</p>
+        </section>
+
+        <section id="s12">
+          <h2>12. 审计要求</h2>
+          <h3>12.1 最低审计信息</h3>
+          <ul>
+            <li>event id</li>
+            <li>ref</li>
+            <li>sid</li>
+            <li>payload hash</li>
+            <li>状态变更时间</li>
+            <li>输出文件路径</li>
+            <li>run hash</li>
+            <li>签名状态</li>
+            <li>通知状态</li>
+          </ul>
+
+          <h3>12.2 审计目标</h3>
+          <ol>
+            <li>该事件是否到达过？</li>
+            <li>到达了几次？</li>
+            <li>哪次是首次正式处理？</li>
+            <li>是否发生过重复触发？</li>
+            <li>是否复用了既有结果？</li>
+            <li>当前正式结果是什么？</li>
+            <li>是否存在不一致副作用？</li>
+          </ol>
+        </section>
+
+        <section id="s13">
+          <h2>13. 安全与信任边界</h2>
+          <h3>13.1 幂等不是授权</h3>
+          <p>幂等处理只解决“重复执行”问题，不自动等同于来源可信、权限合法、内容真实或业务正确。因此幂等机制必须与 webhook 验签、target policy、参数校验、delivery policy 共同工作。</p>
+
+          <h3>13.2 幂等不是防伪</h3>
+          <p>幂等能防止重复生产，但不能单独证明交付内容不可伪造。若需更强信任，应配合 run hash、Ed25519 signature、anchor public key、二阶段验证页和多节点签名。</p>
+        </section>
+
+        <section id="s14">
+          <h2>14. 实现建议</h2>
+          <h3>14.1 记录文件</h3>
+          <pre>/var/lib/auditvisa/processed.jsonl</pre>
+
+          <h3>14.2 交付目录</h3>
+          <pre>/var/lib/auditvisa/deliveries/</pre>
+
+          <h3>14.3 核心步骤</h3>
+          <ol>
+            <li>接收 webhook</li>
+            <li>验签</li>
+            <li>提取 <code>event_id</code></li>
+            <li>查询 <code>processed.jsonl</code></li>
+            <li>未处理则加锁进入处理</li>
+            <li>生成结果并写入 delivery</li>
+            <li>记录 processed</li>
+            <li>发送 Telegram 通知</li>
+            <li>重复事件则直接返回既有链接</li>
+          </ol>
+
+          <h3>14.4 推荐日志语义</h3>
+          <pre>event_received
+event_processing_started
+event_processed
+event_duplicate_reused
+event_failed
+event_orphaned
+delivery_written
+telegram_notified</pre>
+        </section>
+
+        <section id="s15">
+          <h2>15. 对外说明建议</h2>
+          <div class="quote">
+            AuditVisa implements idempotent event processing to ensure that repeated triggers, retries, or duplicate webhook deliveries do not create inconsistent or duplicated certification artifacts. The same verified event always resolves to the same canonical result.
+          </div>
+          <div class="quote">
+            AuditVisa 实现了幂等事件处理机制，能够在重复触发、网络重试或外部平台重复投递情况下，始终将同一有效事件解析为同一正式结果，从而避免重复出证与不一致副作用。
+          </div>
+        </section>
+
+        <section id="s16">
+          <h2>16. 合规结论</h2>
+          <ul>
+            <li>同一事件不会重复出证；</li>
+            <li>同一事件不会重复生成冲突性交付包；</li>
+            <li>重复事件可回溯并复用既有正式结果；</li>
+            <li>状态流转清晰可审计；</li>
+            <li>网络重试不会破坏系统稳定性。</li>
+          </ul>
+        </section>
+
+        <section id="s17">
+          <h2>17. 版本信息</h2>
+          <p><strong>Specification Name:</strong> AuditVisa Idempotent Processing Specification</p>
+          <p><strong>Version:</strong> v1.0</p>
+          <p><strong>Status:</strong> Draft for implementation / public documentation</p>
+          <p><strong>Maintained by:</strong> AuditVisa / AI Origins related structure</p>
+          <p><strong>Language:</strong> Chinese primary, English title retained; bilingual expansion optional</p>
+        </section>
+
+        <section id="s18">
+          <h2>18. 一句定位版</h2>
+          <div class="quote"><strong>同一事件，只产生一个正式结果；重复到达，只复用，不重做。</strong></div>
+          <p class="small">可直接作为页面摘要、对外说明或产品说明中的一句定位语。</p>
+        </section>
+      </main>
+
+      <footer>
+        <div class="grid">
+          <div class="box"><strong>Suggested URL</strong><br><code>https://aipoints.org/spec/auditvisa-idempotency-v1.0.html</code></div>
+          <div class="box"><strong>Canonical host</strong><br>AI Points · Public Structure Layer</div>
+          <div class="box"><strong>Document type</strong><br>Single-page publishable HTML draft with metadata</div>
+        </div>
+      </footer>
+    </article>
+  </div>
+</body>
+</html>
