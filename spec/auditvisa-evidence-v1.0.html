@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AuditVisa Evidence Specification v1.0</title>
+
+  <meta name="description" content="AuditVisa Evidence Specification v1.0">
+  <link rel="canonical" href="https://aipoints.org/spec/auditvisa-evidence-v1.0.html">
+
+  <style>
+    body{
+      font-family: Arial, sans-serif;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 48px 20px;
+      line-height: 1.8;
+      color: #1c1c1a;
+      background: #f6f3ea;
+    }
+    h1{font-size:34px;margin-top:0;}
+    h2{margin-top:32px;}
+    h3{margin-top:20px;}
+    p{margin:14px 0;}
+    code, pre{
+      font-family: monospace;
+      background:#f3efe4;
+      padding:4px 6px;
+      border-radius:6px;
+    }
+    pre{
+      display:block;
+      padding:12px;
+      overflow:auto;
+    }
+    .intro{color:#666;}
+    .quote{
+      background:#fff8ec;
+      border-left:4px solid #b89b5e;
+      padding:10px 14px;
+      margin:16px 0;
+    }
+    a{color:#465f92;text-decoration:none;}
+    a:hover{text-decoration:underline;}
+  </style>
+</head>
+
+<body>
+
+<h1>AuditVisa Evidence Specification v1.0</h1>
+
+<p class="intro">
+Defines the structure, format, and verification model of AuditVisa evidence outputs.
+</p>
+
+<div class="quote">
+同一结果，必须可复现、可验证、可传递。
+</div>
+
+---
+
+<h2>1. Purpose</h2>
+
+<p>
+This specification defines the structure and composition of AuditVisa evidence outputs,
+ensuring that each generated result is verifiable, consistent, and transferable across systems.
+</p>
+
+---
+
+<h2>2. Evidence Components</h2>
+
+<p>An AuditVisa evidence package consists of the following elements:</p>
+
+<ul>
+  <li>HTML report</li>
+  <li>ZIP package</li>
+  <li>JSON metadata</li>
+  <li>Run hash</li>
+  <li>Optional signature</li>
+</ul>
+
+---
+
+<h2>3. File Structure</h2>
+
+<pre>
+auditvisa-{id}.zip
+├── report.html
+├── metadata.json
+├── runhash.txt
+└── signature.sig (optional)
+</pre>
+
+---
+
+<h2>4. Metadata Format</h2>
+
+<pre>
+{
+  "event_id": "evt_xxx",
+  "ref": "av_evt_xxx",
+  "timestamp": "2026-03-01T10:00:00Z",
+  "target": "https://example.com",
+  "status": "completed",
+  "run_hash": "abc123...",
+  "generator": "AuditVisa v0.2"
+}
+</pre>
+
+---
+
+<h2>5. Run Hash</h2>
+
+<p>
+Run hash is a deterministic hash generated from the evidence content.
+</p>
+
+<p>It should include:</p>
+
+<ul>
+  <li>HTML content</li>
+  <li>JSON metadata</li>
+  <li>Normalized input parameters</li>
+</ul>
+
+---
+
+<h3>5.1 Purpose</h3>
+
+<ul>
+  <li>Detect tampering</li>
+  <li>Ensure consistency</li>
+  <li>Enable verification</li>
+</ul>
+
+---
+
+<h2>6. Verification Model</h2>
+
+<p>Verification should follow these steps:</p>
+
+<ol>
+  <li>Extract ZIP</li>
+  <li>Recalculate run hash</li>
+  <li>Compare with stored runhash.txt</li>
+  <li>Verify signature (if present)</li>
+</ol>
+
+---
+
+<h2>7. Signature (Optional)</h2>
+
+<p>
+AuditVisa may include Ed25519 signature for enhanced trust.
+</p>
+
+<pre>
+signature = Sign(run_hash, private_key)
+</pre>
+
+---
+
+<h2>8. Integrity Rules</h2>
+
+<ul>
+  <li>No partial files allowed</li>
+  <li>All components must match run hash</li>
+  <li>Any modification invalidates the evidence</li>
+</ul>
+
+---
+
+<h2>9. Reproducibility</h2>
+
+<p>
+Given the same input, AuditVisa should generate identical evidence output.
+</p>
+
+---
+
+<h2>10. Delivery</h2>
+
+<p>Evidence may be delivered via:</p>
+
+<ul>
+  <li>Direct download URL</li>
+  <li>API response</li>
+  <li>Archive distribution</li>
+</ul>
+
+---
+
+<h2>11. Positioning</h2>
+
+<div class="quote">
+Evidence defines what was produced.  
+Idempotency defines how it was produced.
+</div>
+
+---
+
+<h2>12. Version</h2>
+
+<p>
+Version: v1.0<br>
+Status: Draft / Initial Release
+</p>
+
+</body>
+</html>
