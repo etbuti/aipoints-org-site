@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AuditVisa · Verifiable Results</title>
+
+  <meta name="description" content="A system that produces results that anyone can independently verify.">
+
+  <style>
+    body{
+      font-family: Arial, sans-serif;
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 64px 20px;
+      line-height: 1.8;
+      color: #1c1c1a;
+      background: #f6f3ea;
+    }
+
+    h1{
+      font-size: 40px;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .sub{
+      font-size: 18px;
+      color: #555;
+      margin-bottom: 40px;
+    }
+
+    .quote{
+      background:#fff8ec;
+      border-left:4px solid #b89b5e;
+      padding:12px 16px;
+      margin:32px 0;
+    }
+
+    h2{
+      margin-top:40px;
+    }
+
+    p{
+      margin:14px 0;
+    }
+
+    a{
+      color:#465f92;
+      text-decoration:none;
+    }
+
+    a:hover{
+      text-decoration:underline;
+    }
+
+    .links{
+      margin-top:40px;
+    }
+
+    .links a{
+      display:block;
+      margin:8px 0;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<h1>
+A system that produces results  
+that anyone can independently verify.
+</h1>
+
+<p class="sub">
+AuditVisa is a minimal structure for generating verifiable outcomes.
+</p>
+
+<div class="quote">
+We do not claim truth.  
+We make truth testable.
+</div>
+
+---
+
+<h2>What it does</h2>
+
+<p>
+AuditVisa turns an event into a result that can be independently verified.
+</p>
+
+<p>
+Each result is:
+</p>
+
+<ul>
+  <li>Deterministic</li>
+  <li>Reproducible</li>
+  <li>Cryptographically verifiable</li>
+</ul>
+
+---
+
+<h2>How it works</h2>
+
+<p>
+The system is defined by three layers:
+</p>
+
+<ul>
+  <li>
+    <a href="/spec/auditvisa-idempotency-v1.0.html">
+      Idempotent processing
+    </a>
+    — ensures one event produces one result
+  </li>
+
+  <li>
+    <a href="/spec/auditvisa-evidence-v1.0.html">
+      Evidence structure
+    </a>
+    — defines what is produced
+  </li>
+
+  <li>
+    <a href="/spec/auditvisa-verification-v1.0.html">
+      Verification model
+    </a>
+    — allows anyone to verify it
+  </li>
+</ul>
+
+---
+
+<h2>Why it matters</h2>
+
+<p>
+Most systems ask you to trust the source.  
+This system removes that requirement.
+</p>
+
+<p>
+Verification replaces trust.
+</p>
+
+---
+
+<h2>Network</h2>
+
+<p>
+The system can be extended into a network of independent nodes.
+</p>
+
+<p>
+Each node can:
+</p>
+
+<ul>
+  <li>Produce evidence</li>
+  <li>Verify results</li>
+  <li>Participate in shared validation</li>
+</ul>
+
+---
+
+<h2>Start</h2>
+
+<div class="links">
+
+<a href="/spec/overview.html">
+View specification overview
+</a>
+
+<a href="/spec/">
+Browse specifications
+</a>
+
+<a href="https://aiorigins.org/run-node/">
+Run an observation node
+</a>
+
+</div>
+
+---
+
+</body>
+</html>
