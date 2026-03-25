@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AuditVisa Verification Specification v1.0</title>
+
+  <meta name="description" content="AuditVisa Verification Specification v1.0">
+  <link rel="canonical" href="https://aipoints.org/spec/auditvisa-verification-v1.0.html">
+
+  <style>
+    body{
+      font-family: Arial, sans-serif;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 48px 20px;
+      line-height: 1.8;
+      color: #1c1c1a;
+      background: #f6f3ea;
+    }
+    h1{font-size:34px;margin-top:0;}
+    h2{margin-top:32px;}
+    h3{margin-top:20px;}
+    p{margin:14px 0;}
+    code, pre{
+      font-family: monospace;
+      background:#f3efe4;
+      padding:4px 6px;
+      border-radius:6px;
+    }
+    pre{
+      display:block;
+      padding:12px;
+      overflow:auto;
+    }
+    .intro{color:#666;}
+    .quote{
+      background:#fff8ec;
+      border-left:4px solid #b89b5e;
+      padding:10px 14px;
+      margin:16px 0;
+    }
+    a{color:#465f92;text-decoration:none;}
+    a:hover{text-decoration:underline;}
+  </style>
+</head>
+
+<body>
+
+<h1>AuditVisa Verification Specification v1.0</h1>
+
+<p class="intro">
+Defines how AuditVisa evidence is verified across local, remote, and third-party contexts.
+</p>
+
+<div class="quote">
+验证不是“相信”，而是“重算并比对”。
+</div>
+
+---
+
+<h2>1. Purpose</h2>
+
+<p>
+This specification defines the verification process for AuditVisa evidence,
+ensuring that any party can independently validate the integrity and authenticity of a result.
+</p>
+
+---
+
+<h2>2. Verification Types</h2>
+
+<ul>
+  <li>Local verification (offline)</li>
+  <li>Remote verification (web-based)</li>
+  <li>Third-party verification (multi-node)</li>
+</ul>
+
+---
+
+<h2>3. Input Requirements</h2>
+
+<p>Verification requires:</p>
+
+<ul>
+  <li>ZIP evidence package</li>
+  <li>metadata.json</li>
+  <li>runhash.txt</li>
+  <li>signature (optional)</li>
+</ul>
+
+---
+
+<h2>4. Local Verification</h2>
+
+<ol>
+  <li>Extract ZIP</li>
+  <li>Read metadata.json</li>
+  <li>Recompute run hash</li>
+  <li>Compare with runhash.txt</li>
+</ol>
+
+<p>If all match → valid</p>
+
+---
+
+<h2>5. Run Hash Validation</h2>
+
+<p>Run hash must be recalculated using the same deterministic method:</p>
+
+<pre>
+hash = SHA256(
+  normalized(metadata.json) +
+  normalized(report.html)
+)
+</pre>
+
+---
+
+<h2>6. Signature Verification</h2>
+
+<p>If signature is present:</p>
+
+<pre>
+verify(signature, run_hash, public_key)
+</pre>
+
+<p>
+Public key should be retrieved from:
+</p>
+
+<pre>
+https://aiorigins.org/.well-known/auditvisa.pub
+</pre>
+
+---
+
+<h2>7. Remote Verification</h2>
+
+<p>
+A verification page may allow users to upload a ZIP file and automatically perform:
+</p>
+
+<ul>
+  <li>Run hash recalculation</li>
+  <li>Signature validation</li>
+  <li>Result display</li>
+</ul>
+
+---
+
+<h2>8. Verification Output</h2>
+
+<p>Verification result must clearly indicate:</p>
+
+<ul>
+  <li>Valid / Invalid</li>
+  <li>Run hash match status</li>
+  <li>Signature status</li>
+  <li>Timestamp</li>
+</ul>
+
+---
+
+<h2>9. Failure Conditions</h2>
+
+<ul>
+  <li>Missing files</li>
+  <li>Hash mismatch</li>
+  <li>Signature invalid</li>
+  <li>Corrupted package</li>
+</ul>
+
+---
+
+<h2>10. Trust Model</h2>
+
+<div class="quote">
+Verification does not require trusting the issuer.  
+It only requires reproducibility and cryptographic consistency.
+</div>
+
+---
+
+<h2>11. Multi-Node Verification (Future)</h2>
+
+<p>
+Future versions may support:
+</p>
+
+<ul>
+  <li>Multiple signatures</li>
+  <li>Independent node verification</li>
+  <li>Consensus-based validation</li>
+</ul>
+
+---
+
+<h2>12. Positioning</h2>
+
+<div class="quote">
+Idempotency controls execution.  
+Evidence defines output.  
+Verification confirms truth.
+</div>
+
+---
+
+<h2>13. Version</h2>
+
+<p>
+Version: v1.0<br>
+Status: Draft / Initial Release
+</p>
+
+</body>
+</html>
