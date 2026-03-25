@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Specification Overview · AI Points</title>
+
+  <meta name="description" content="Overview of AuditVisa specifications: Idempotency, Evidence, and Verification.">
+  <link rel="canonical" href="https://aipoints.org/spec/overview.html">
+
+  <style>
+    body{
+      font-family: Arial, sans-serif;
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 48px 20px;
+      line-height: 1.8;
+      color: #1c1c1a;
+      background: #f6f3ea;
+    }
+    h1{font-size:34px;margin-top:0;}
+    h2{margin-top:32px;}
+    p{margin:14px 0;}
+    a{color:#465f92;text-decoration:none;}
+    a:hover{text-decoration:underline;}
+
+    .intro{color:#666;}
+
+    .block{
+      margin:28px 0;
+      padding:18px;
+      background:#fffdf8;
+      border:1px solid #ddd7c8;
+      border-radius:14px;
+    }
+
+    .quote{
+      background:#fff8ec;
+      border-left:4px solid #b89b5e;
+      padding:10px 14px;
+      margin:18px 0;
+    }
+
+    .label{
+      font-size:12px;
+      color:#888;
+      margin-bottom:6px;
+    }
+
+    .title{
+      font-size:20px;
+      margin-bottom:8px;
+    }
+
+    .desc{
+      font-size:14px;
+      color:#555;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Specification Overview</h1>
+
+<p class="intro">
+This page provides an overview of the AuditVisa specification system,
+defining how events are processed, results are produced, and truth is verified.
+</p>
+
+<div class="quote">
+不是记录事实，而是让事实可以被重复验证。
+</div>
+
+---
+
+<h2>Core Structure</h2>
+
+<p>
+AuditVisa is defined by three core specifications:
+</p>
+
+<div class="block">
+  <div class="label">PROCESS</div>
+  <div class="title">
+    <a href="/spec/auditvisa-idempotency-v1.0.html">
+      Idempotent Processing
+    </a>
+  </div>
+  <div class="desc">
+    Defines how events are executed.  
+    Ensures repeated triggers produce a single canonical result.
+  </div>
+</div>
+
+<div class="block">
+  <div class="label">OUTPUT</div>
+  <div class="title">
+    <a href="/spec/auditvisa-evidence-v1.0.html">
+      Evidence Structure
+    </a>
+  </div>
+  <div class="desc">
+    Defines what is produced.  
+    Standardizes the format of evidence packages and metadata.
+  </div>
+</div>
+
+<div class="block">
+  <div class="label">VERIFICATION</div>
+  <div class="title">
+    <a href="/spec/auditvisa-verification-v1.0.html">
+      Verification Model
+    </a>
+  </div>
+  <div class="desc">
+    Defines how results are verified.  
+    Enables independent validation without trusting the issuer.
+  </div>
+</div>
+
+---
+
+<h2>Conceptual Model</h2>
+
+<div class="quote">
+Idempotency controls execution.  
+Evidence defines output.  
+Verification confirms truth.
+</div>
+
+<p>
+These three layers together form a minimal verifiable system.
+</p>
+
+---
+
+<h2>Design Principles</h2>
+
+<ul>
+  <li>Deterministic execution</li>
+  <li>Reproducible output</li>
+  <li>Independent verification</li>
+  <li>No reliance on centralized trust</li>
+</ul>
+
+---
+
+<h2>Positioning</h2>
+
+<p>
+AuditVisa is not a data storage system.  
+It is a system for producing verifiable evidence.
+</p>
+
+<p>
+It does not claim truth —  
+it ensures that truth can be tested.
+</p>
+
+---
+
+<h2>Next Layers (Future)</h2>
+
+<ul>
+  <li>Multi-node signatures</li>
+  <li>Chain-based time anchoring</li>
+  <li>Third-party verification network</li>
+</ul>
+
+---
+
+<h2>Entry Points</h2>
+
+<p>
+Specification index:
+<a href="/spec/">/spec/</a>
+</p>
+
+<p>
+Run a node:
+<a href="https://aiorigins.org/run-node/">aiorigins.org/run-node</a>
+</p>
+
+---
+
+</body>
+</html>
