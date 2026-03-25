@@ -3,17 +3,77 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Specification</title>
+  <title>Specification · AI Points</title>
+
+  <meta name="description" content="Public specification entry page for structural rules, notes, and formal references.">
+  <link rel="canonical" href="https://aipoints.org/spec/">
+
   <style>
-    body{font-family:Arial,sans-serif;max-width:860px;margin:0 auto;padding:48px 20px;line-height:1.8;}
+    body{
+      font-family: Arial, sans-serif;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 48px 20px;
+      line-height: 1.8;
+      color: #1c1c1a;
+      background: #f6f3ea;
+    }
+    h1{
+      margin-top: 0;
+      font-size: 34px;
+    }
+    p{
+      margin: 14px 0;
+    }
+    .intro{
+      color: #666;
+    }
+    a{
+      color: #465f92;
+      text-decoration: none;
+    }
+    a:hover{
+      text-decoration: underline;
+    }
+    .section{
+      margin-top: 36px;
+    }
+    .item{
+      margin: 14px 0;
+    }
+    .desc{
+      color: #555;
+      font-size: 14px;
+    }
   </style>
 </head>
+
 <body>
-  <h1>Specification</h1>
-  <p>Public specification entry page for structural rules, notes, and formal references.</p>
-  <p>
-  To operate an observation node, see:
-  <a href="https://aiorigins.org/run-node/">Run an Observation Node</a>.
-  </p>
+
+<h1>Specification</h1>
+
+<p class="intro">
+Public specification entry page for structural rules, notes, and formal references.
+</p>
+
+<p>
+To operate an observation node, see:
+<a href="https://aiorigins.org/run-node/">Run an Observation Node</a>.
+</p>
+
+<div class="section">
+  <strong>Published specifications</strong>
+
+  <div class="item">
+    <a href="/spec/auditvisa-idempotency-v1.0.html">
+      AuditVisa Idempotent Processing Specification v1.0
+    </a>
+    <div class="desc">
+      Defines idempotent event handling for AuditVisa, ensuring repeated triggers resolve to a single canonical result.
+    </div>
+  </div>
+
+</div>
+
 </body>
 </html>
