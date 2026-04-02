@@ -78,3 +78,10 @@ canvas {
   line-height: 1.6;
   color: #cfffff;
 }
+
+.hint {
+  margin-top: 14px;
+  font-size: 12px;
+  color: rgba(140, 255, 255, 0.6);
+  letter-spacing: 0.05em;
+}
