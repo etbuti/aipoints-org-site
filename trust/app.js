@@ -32,6 +32,16 @@ const earth = new THREE.Mesh(
 );
 scene.add(earth);
 
+const glow = new THREE.Mesh(
+  new THREE.SphereGeometry(1.05, 64, 64),
+  new THREE.MeshBasicMaterial({
+    color: 0x00ffff,
+    transparent: true,
+    opacity: 0.05
+  })
+);
+scene.add(glow);
+
 // 节点组
 const nodesGroup = new THREE.Group();
 scene.add(nodesGroup);
@@ -70,6 +80,10 @@ fetch("nodes.json")
 
       mesh.position.copy(pos);
       mesh.userData = n;
+
+      // 👇 这一行（记录基础大小）
+      mesh.baseScale = 1;
+      
       nodesGroup.add(mesh);
     });
 
@@ -134,5 +148,12 @@ function animate() {
 
   renderer.render(scene, camera);
 }
+
+nodesGroup.children.forEach((node, i) => {
+  const pulse = 1 + Math.sin(Date.now() * 0.002 + i) * 0.2;
+  node.scale.set(pulse, pulse, pulse);
+});
+
+line.material.opacity = 0.1 + Math.sin(Date.now()*0.002)*0.2;
 
 animate();
