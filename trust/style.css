@@ -1,0 +1,27 @@
+body {
+margin:0;
+background:#000;
+overflow:hidden;
+font-family:Arial;
+}
+
+canvas {
+position:absolute;
+top:0;
+left:0;
+}
+
+#panel {
+position:absolute;
+top:20px;
+left:20px;
+width:260px;
+padding:16px;
+background:rgba(0,0,0,0.6);
+border:1px solid #00ffff;
+color:#00ffff;
+}
+
+h2 {
+margin:0 0 10px 0;
+}
