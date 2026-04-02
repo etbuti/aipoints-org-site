@@ -22,7 +22,42 @@ window.addEventListener("resize", () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// 地球
+// ===== 星空背景粒子 =====
+function createStars(count = 1200) {
+  const positions = [];
+  for (let i = 0; i < count; i++) {
+    const r = 20 + Math.random() * 30;
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+
+    const x = r * Math.sin(phi) * Math.cos(theta);
+    const y = r * Math.sin(phi) * Math.sin(theta);
+    const z = r * Math.cos(phi);
+
+    positions.push(x, y, z);
+  }
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute(
+    "position",
+    new THREE.Float32BufferAttribute(positions, 3)
+  );
+
+  const material = new THREE.PointsMaterial({
+    color: 0xffffff,
+    size: 0.05,
+    transparent: true,
+    opacity: 0.8
+  });
+
+  const stars = new THREE.Points(geometry, material);
+  scene.add(stars);
+  return stars;
+}
+
+const stars = createStars(1400);
+
+// ===== 地球 =====
 const earth = new THREE.Mesh(
   new THREE.SphereGeometry(1, 64, 64),
   new THREE.MeshBasicMaterial({
@@ -32,7 +67,7 @@ const earth = new THREE.Mesh(
 );
 scene.add(earth);
 
-// 光晕
+// ===== 光晕 =====
 const glow = new THREE.Mesh(
   new THREE.SphereGeometry(1.05, 64, 64),
   new THREE.MeshBasicMaterial({
@@ -43,11 +78,11 @@ const glow = new THREE.Mesh(
 );
 scene.add(glow);
 
-// 节点组
+// ===== 节点组 =====
 const nodesGroup = new THREE.Group();
 scene.add(nodesGroup);
 
-// 连线与飞线容器
+// ===== 连线与飞线容器 =====
 const lines = [];
 const flyers = [];
 
@@ -68,7 +103,6 @@ function createArcCurve(start, end, arcHeight = 0.25) {
   const mid = new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5);
   const midLength = mid.length();
 
-  // 控制点向外抬起
   mid.normalize().multiplyScalar(midLength + arcHeight);
 
   return new THREE.QuadraticBezierCurve3(start, mid, end);
@@ -96,7 +130,7 @@ function createFlyer(curve, color = 0x00ffff) {
   flyers.push(flyer);
 }
 
-// 加载节点
+// ===== 加载节点 =====
 fetch("nodes.json")
   .then((r) => r.json())
   .then((nodes) => {
@@ -148,7 +182,6 @@ fetch("nodes.json")
         scene.add(line);
         lines.push(line);
 
-        // 每条弧线放一个飞线点
         createFlyer(curve, 0x00ffff);
       });
     });
@@ -158,7 +191,7 @@ fetch("nodes.json")
     document.getElementById("info").innerHTML = "Failed to load nodes.json";
   });
 
-// 点击节点
+// ===== 点击节点 =====
 window.addEventListener("click", (event) => {
   const mouse = new THREE.Vector2(
     (event.clientX / window.innerWidth) * 2 - 1,
@@ -182,7 +215,7 @@ window.addEventListener("click", (event) => {
   }
 });
 
-// 动画
+// ===== 动画 =====
 function animate() {
   requestAnimationFrame(animate);
 
@@ -191,6 +224,7 @@ function animate() {
   earth.rotation.y += 0.002;
   glow.rotation.y += 0.0015;
   nodesGroup.rotation.y += 0.002;
+  stars.rotation.y += 0.00015;
 
   // 节点呼吸
   nodesGroup.children.forEach((node, i) => {
