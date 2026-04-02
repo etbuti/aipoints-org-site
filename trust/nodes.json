@@ -1,0 +1,26 @@
+[
+  {
+    "id": "core-uk",
+    "lat": 51.5,
+    "lng": -0.1,
+    "trust": 1.5,
+    "status": "active",
+    "anchor": "AIR-2026-04-02-core"
+  },
+  {
+    "id": "qd-01",
+    "lat": 36.07,
+    "lng": 120.38,
+    "trust": 1.2,
+    "status": "active",
+    "anchor": "AIR-2026-04-02-qd01"
+  },
+  {
+    "id": "seoul-01",
+    "lat": 37.56,
+    "lng": 126.97,
+    "trust": 1.1,
+    "status": "planned",
+    "anchor": "-"
+  }
+]
