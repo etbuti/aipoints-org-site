@@ -22,9 +22,10 @@ window.addEventListener("resize", () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// ===== 星空背景粒子 =====
-function createStars(count = 1200) {
+// 星空背景粒子
+function createStars(count = 1400) {
   const positions = [];
+
   for (let i = 0; i < count; i++) {
     const r = 20 + Math.random() * 30;
     const theta = Math.random() * Math.PI * 2;
@@ -47,7 +48,7 @@ function createStars(count = 1200) {
     color: 0xffffff,
     size: 0.05,
     transparent: true,
-    opacity: 0.8
+    opacity: 0.45
   });
 
   const stars = new THREE.Points(geometry, material);
@@ -57,7 +58,7 @@ function createStars(count = 1200) {
 
 const stars = createStars(1400);
 
-// ===== 地球 =====
+// 地球
 const earth = new THREE.Mesh(
   new THREE.SphereGeometry(1, 64, 64),
   new THREE.MeshBasicMaterial({
@@ -67,7 +68,7 @@ const earth = new THREE.Mesh(
 );
 scene.add(earth);
 
-// ===== 光晕 =====
+// 光晕
 const glow = new THREE.Mesh(
   new THREE.SphereGeometry(1.05, 64, 64),
   new THREE.MeshBasicMaterial({
@@ -78,11 +79,11 @@ const glow = new THREE.Mesh(
 );
 scene.add(glow);
 
-// ===== 节点组 =====
+// 节点组
 const nodesGroup = new THREE.Group();
 scene.add(nodesGroup);
 
-// ===== 连线与飞线容器 =====
+// 连线与飞线容器
 const lines = [];
 const flyers = [];
 
@@ -130,11 +131,12 @@ function createFlyer(curve, color = 0x00ffff) {
   flyers.push(flyer);
 }
 
-// ===== 加载节点 =====
+// 加载节点
 fetch("nodes.json")
   .then((r) => r.json())
   .then((nodes) => {
-    document.getElementById("info").innerHTML = "Nodes: " + nodes.length;
+    document.getElementById("info").innerHTML =
+      "Select a node to inspect trust, status, and anchor signal.";
 
     // 节点
     nodes.forEach((n) => {
@@ -146,7 +148,7 @@ fetch("nodes.json")
                         0xff4444;
 
       const mesh = new THREE.Mesh(
-        new THREE.SphereGeometry(0.025, 16, 16),
+        new THREE.SphereGeometry(0.04, 16, 16),
         new THREE.MeshBasicMaterial({ color })
       );
 
@@ -191,7 +193,7 @@ fetch("nodes.json")
     document.getElementById("info").innerHTML = "Failed to load nodes.json";
   });
 
-// ===== 点击节点 =====
+// 点击节点
 window.addEventListener("click", (event) => {
   const mouse = new THREE.Vector2(
     (event.clientX / window.innerWidth) * 2 - 1,
@@ -208,14 +210,20 @@ window.addEventListener("click", (event) => {
 
     document.getElementById("info").innerHTML = `
       <b>${node.id}</b><br/>
-      Trust: ${node.trust}<br/>
+      Trust Score: ${node.trust}<br/>
       Status: ${node.status}<br/>
-      Anchor: ${node.anchor}
+      Anchor Signal: ${node.anchor}<br/>
+      Position: ${node.lat}, ${node.lng}
+    `;
+
+    document.getElementById("hero-info").innerHTML = `
+      Selected node: <b>${node.id}</b><br/>
+      Trust ${node.trust} · ${node.status}
     `;
   }
 });
 
-// ===== 动画 =====
+// 动画
 function animate() {
   requestAnimationFrame(animate);
 
