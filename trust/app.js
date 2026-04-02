@@ -47,8 +47,9 @@ scene.add(glow);
 const nodesGroup = new THREE.Group();
 scene.add(nodesGroup);
 
-// 存放所有连线
+// 连线与飞线容器
 const lines = [];
+const flyers = [];
 
 // 经纬度转 3D 坐标
 function latLngToVec3(lat, lng, r = 1) {
@@ -60,6 +61,29 @@ function latLngToVec3(lat, lng, r = 1) {
      r * Math.cos(phi),
      r * Math.sin(phi) * Math.sin(theta)
   );
+}
+
+// 创建飞线点
+function createFlyer(start, end, color = 0x00ffff) {
+  const flyer = new THREE.Mesh(
+    new THREE.SphereGeometry(0.01, 12, 12),
+    new THREE.MeshBasicMaterial({
+      color: color,
+      transparent: true,
+      opacity: 0.9
+    })
+  );
+
+  flyer.userData = {
+    start: start.clone(),
+    end: end.clone(),
+    progress: Math.random(),
+    speed: 0.003 + Math.random() * 0.004
+  };
+
+  flyer.position.copy(start);
+  scene.add(flyer);
+  flyers.push(flyer);
 }
 
 // 加载节点
@@ -89,7 +113,7 @@ fetch("nodes.json")
       nodesGroup.add(mesh);
     });
 
-    // 连线
+    // 连线 + 飞线
     nodes.forEach((a, i) => {
       nodes.forEach((b, j) => {
         if (j <= i) return;
@@ -110,6 +134,9 @@ fetch("nodes.json")
 
         scene.add(line);
         lines.push(line);
+
+        // 每条线放一个飞线点
+        createFlyer(pos1, pos2, 0x00ffff);
       });
     });
   })
@@ -161,6 +188,21 @@ function animate() {
   // 连线流动感
   lines.forEach((line, i) => {
     line.material.opacity = 0.08 + (Math.sin(t + i) + 1) * 0.08;
+  });
+
+  // 飞线运动
+  flyers.forEach((flyer) => {
+    const data = flyer.userData;
+    data.progress += data.speed;
+
+    if (data.progress > 1) {
+      data.progress = 0;
+    }
+
+    flyer.position.lerpVectors(data.start, data.end, data.progress);
+
+    const s = 0.8 + Math.sin(t * 2 + data.progress * Math.PI * 2) * 0.3;
+    flyer.scale.set(s, s, s);
   });
 
   renderer.render(scene, camera);
