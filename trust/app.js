@@ -32,6 +32,7 @@ const earth = new THREE.Mesh(
 );
 scene.add(earth);
 
+// 光晕
 const glow = new THREE.Mesh(
   new THREE.SphereGeometry(1.05, 64, 64),
   new THREE.MeshBasicMaterial({
@@ -45,6 +46,9 @@ scene.add(glow);
 // 节点组
 const nodesGroup = new THREE.Group();
 scene.add(nodesGroup);
+
+// 存放所有连线
+const lines = [];
 
 // 经纬度转 3D 坐标
 function latLngToVec3(lat, lng, r = 1) {
@@ -80,10 +84,8 @@ fetch("nodes.json")
 
       mesh.position.copy(pos);
       mesh.userData = n;
-
-      // 👇 这一行（记录基础大小）
       mesh.baseScale = 1;
-      
+
       nodesGroup.add(mesh);
     });
 
@@ -102,11 +104,12 @@ fetch("nodes.json")
           new THREE.LineBasicMaterial({
             color: 0x00ffff,
             transparent: true,
-            opacity: 0.2
+            opacity: 0.15
           })
         );
 
         scene.add(line);
+        lines.push(line);
       });
     });
   })
@@ -143,17 +146,24 @@ window.addEventListener("click", (event) => {
 function animate() {
   requestAnimationFrame(animate);
 
+  const t = Date.now() * 0.002;
+
   earth.rotation.y += 0.002;
+  glow.rotation.y += 0.0015;
   nodesGroup.rotation.y += 0.002;
+
+  // 节点呼吸
+  nodesGroup.children.forEach((node, i) => {
+    const pulse = node.baseScale + Math.sin(t + i) * 0.2;
+    node.scale.set(pulse, pulse, pulse);
+  });
+
+  // 连线流动感
+  lines.forEach((line, i) => {
+    line.material.opacity = 0.08 + (Math.sin(t + i) + 1) * 0.08;
+  });
 
   renderer.render(scene, camera);
 }
-
-nodesGroup.children.forEach((node, i) => {
-  const pulse = 1 + Math.sin(Date.now() * 0.002 + i) * 0.2;
-  node.scale.set(pulse, pulse, pulse);
-});
-
-line.material.opacity = 0.1 + Math.sin(Date.now()*0.002)*0.2;
 
 animate();
