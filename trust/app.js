@@ -63,25 +63,35 @@ function latLngToVec3(lat, lng, r = 1) {
   );
 }
 
+// 创建弧线曲线
+function createArcCurve(start, end, arcHeight = 0.25) {
+  const mid = new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5);
+  const midLength = mid.length();
+
+  // 控制点向外抬起
+  mid.normalize().multiplyScalar(midLength + arcHeight);
+
+  return new THREE.QuadraticBezierCurve3(start, mid, end);
+}
+
 // 创建飞线点
-function createFlyer(start, end, color = 0x00ffff) {
+function createFlyer(curve, color = 0x00ffff) {
   const flyer = new THREE.Mesh(
-    new THREE.SphereGeometry(0.01, 12, 12),
+    new THREE.SphereGeometry(0.012, 12, 12),
     new THREE.MeshBasicMaterial({
       color: color,
       transparent: true,
-      opacity: 0.9
+      opacity: 0.95
     })
   );
 
   flyer.userData = {
-    start: start.clone(),
-    end: end.clone(),
+    curve: curve,
     progress: Math.random(),
-    speed: 0.003 + Math.random() * 0.004
+    speed: 0.002 + Math.random() * 0.003
   };
 
-  flyer.position.copy(start);
+  flyer.position.copy(curve.getPointAt(flyer.userData.progress));
   scene.add(flyer);
   flyers.push(flyer);
 }
@@ -113,7 +123,7 @@ fetch("nodes.json")
       nodesGroup.add(mesh);
     });
 
-    // 连线 + 飞线
+    // 弧线 + 飞线
     nodes.forEach((a, i) => {
       nodes.forEach((b, j) => {
         if (j <= i) return;
@@ -121,24 +131,25 @@ fetch("nodes.json")
         const pos1 = latLngToVec3(a.lat, a.lng, 1);
         const pos2 = latLngToVec3(b.lat, b.lng, 1);
 
-        const geo = new THREE.BufferGeometry().setFromPoints([pos1, pos2]);
+        const curve = createArcCurve(pos1, pos2, 0.25);
+        const points = curve.getPoints(64);
+
+        const geo = new THREE.BufferGeometry().setFromPoints(points);
 
         const line = new THREE.Line(
           geo,
           new THREE.LineBasicMaterial({
             color: 0x00ffff,
             transparent: true,
-            opacity: 0.15
+            opacity: 0.18
           })
         );
 
         scene.add(line);
         lines.push(line);
 
-        // 每条线放一个飞线点
-        createFlyer(pos1, pos2, 0x00ffff);
-        createFlyer(pos1, pos2, 0x00ffff);
-        createFlyer(pos1, pos2, 0x00ffff);
+        // 每条弧线放一个飞线点
+        createFlyer(curve, 0x00ffff);
       });
     });
   })
@@ -187,12 +198,12 @@ function animate() {
     node.scale.set(pulse, pulse, pulse);
   });
 
-  // 连线流动感
+  // 弧线明暗流动
   lines.forEach((line, i) => {
     line.material.opacity = 0.08 + (Math.sin(t + i) + 1) * 0.08;
   });
 
-  // 飞线运动
+  // 飞线沿弧线运动
   flyers.forEach((flyer) => {
     const data = flyer.userData;
     data.progress += data.speed;
@@ -201,7 +212,7 @@ function animate() {
       data.progress = 0;
     }
 
-    flyer.position.lerpVectors(data.start, data.end, data.progress);
+    flyer.position.copy(data.curve.getPointAt(data.progress));
 
     const s = 0.8 + Math.sin(t * 2 + data.progress * Math.PI * 2) * 0.3;
     flyer.scale.set(s, s, s);
