@@ -1,27 +1,80 @@
 body {
-margin:0;
-background:#000;
-overflow:hidden;
-font-family:Arial;
+  margin: 0;
+  background: #000;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  color: #eaffff;
 }
 
 canvas {
-position:absolute;
-top:0;
-left:0;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#hero {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  width: 420px;
+  z-index: 10;
+  padding: 18px 20px;
+  background: rgba(0, 0, 0, 0.32);
+  border: 1px solid rgba(0, 255, 255, 0.22);
+  backdrop-filter: blur(4px);
+}
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  color: #67f7ff;
+  margin-bottom: 10px;
+}
+
+#hero h1 {
+  margin: 0 0 10px 0;
+  font-size: 38px;
+  line-height: 1.05;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.subtitle {
+  margin: 0 0 12px 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: #8eefff;
+}
+
+.narrative {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: rgba(220, 255, 255, 0.82);
 }
 
 #panel {
-position:absolute;
-top:20px;
-left:20px;
-width:260px;
-padding:16px;
-background:rgba(0,0,0,0.6);
-border:1px solid #00ffff;
-color:#00ffff;
+  position: absolute;
+  left: 24px;
+  bottom: 24px;
+  width: 280px;
+  z-index: 10;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.52);
+  border: 1px solid rgba(0, 255, 255, 0.4);
+  color: #9ffcff;
+  backdrop-filter: blur(4px);
 }
 
-h2 {
-margin:0 0 10px 0;
+#panel h2 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+#info {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #cfffff;
 }
