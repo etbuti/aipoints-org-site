@@ -137,6 +137,8 @@ fetch("nodes.json")
 
         // 每条线放一个飞线点
         createFlyer(pos1, pos2, 0x00ffff);
+        createFlyer(pos1, pos2, 0x00ffff);
+        createFlyer(pos1, pos2, 0x00ffff);
       });
     });
   })
