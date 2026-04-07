@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Trust Broadcast Spec v0.1</title>
+<style>
+body{font-family:Arial;max-width:900px;margin:40px auto;line-height:1.7}
+h1{font-size:28px}
+pre{background:#111;color:#0f0;padding:16px;overflow:auto}
+</style>
+</head>
+
+<body>
+
+<h1>Trust Broadcast Spec v0.1</h1>
+
+<p>
+A minimal verifiable broadcast layer for devices, drones, and nodes.
+</p>
+
+<h2>Structure</h2>
+
+<pre>{
+  "spec": "TB-0.1",
+  "device": {...},
+  "time": "...",
+  "location": {...},
+  "status": {...},
+  "hash": "...",
+  "signature": "..."
+}</pre>
+
+<h2>Principles</h2>
+
+<ul>
+<li>Self-contained</li>
+<li>Verifiable</li>
+<li>Non-repudiation</li>
+</ul>
+
+<h2>Verification</h2>
+
+<p>
+Clients must verify hash and signature before accepting any broadcast.
+</p>
+
+</body>
+</html>
