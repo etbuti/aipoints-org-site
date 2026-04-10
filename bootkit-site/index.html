@@ -1,0 +1,79 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Node Boot Kit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      margin: 0;
+      background: #0b0b0c;
+      color: #eaeaea;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .box {
+      max-width: 720px;
+      padding: 40px;
+    }
+    h1 {
+      font-weight: 500;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    p {
+      color: #999;
+      line-height: 1.6;
+    }
+    .cmd {
+      background: #111;
+      border: 1px solid #222;
+      padding: 14px;
+      margin: 20px 0;
+      font-family: monospace;
+      font-size: 14px;
+      overflow-x: auto;
+    }
+    .note {
+      font-size: 13px;
+      color: #666;
+      margin-top: 10px;
+    }
+    .tag {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>Node Boot Kit</h1>
+
+   <p>
+  A minimal entry point for deploying an observation node.<br>
+  No image. No setup. Just a single command.
+</p>
+
+<div class="cmd">
+  curl -fsSL http://89.167.28.102/bootkit/install.sh | bash
+</div>
+
+<p>
+  The node will generate its identity, attempt to register, and begin heartbeat automatically.
+</p>
+
+<div class="note">
+  Current release: v1.3<br>
+  Enrollment is operator-controlled at this stage.
+</div>
+
+<div class="tag">
+  AI Origins · Observation Protocol
+</div>
+
+      </div>
+</body>
+</html>
